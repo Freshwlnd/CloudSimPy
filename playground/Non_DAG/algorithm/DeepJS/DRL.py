@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 
+# tf.version > 2.0 has eager_excution enabled by default and so there is no need to run tf.enable_eager_excution
 tf.enable_eager_execution()
 
 

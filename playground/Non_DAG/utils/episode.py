@@ -6,6 +6,8 @@ from core.simulation import Simulation
 
 
 class Episode(object):
+    # self.env = simpy.Environment()
+    # self.simulation = Simulation(env, cluster, task_broker, scheduler, event_file)
     def __init__(self, machine_configs, task_configs, algorithm, event_file):
         self.env = simpy.Environment()
         cluster = Cluster()

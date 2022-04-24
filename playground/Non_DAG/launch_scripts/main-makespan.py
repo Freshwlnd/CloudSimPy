@@ -1,4 +1,5 @@
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import time
 import numpy as np
 import tensorflow as tf
@@ -24,8 +25,14 @@ from playground.Non_DAG.utils.episode import Episode
 
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
+# 更改当前工作目录为文件所在目录
+os.chdir(sys.path[0])
+
 np.random.seed(41)
+# if tf.version < 2.0, enable this
 tf.random.set_random_seed(41)
+# else, enable this
+#tf.random.set_seed(41)
 # ************************ Parameters Setting Start ************************
 machines_number = 5
 jobs_len = 10
@@ -33,7 +40,7 @@ n_iter = 100
 n_episode = 12
 jobs_csv = '../jobs_files/jobs.csv'
 
-brain = Brain(6)
+brain = Brain(6)    # 神经网络层
 reward_giver = MakespanRewardGiver(-1)
 features_extract_func = features_extract_func
 features_normalize_func = features_normalize_func
@@ -52,30 +59,30 @@ machine_configs = [MachineConfig(64, 1, 1) for i in range(machines_number)]
 csv_reader = CSVReader(jobs_csv)
 jobs_configs = csv_reader.generate(0, jobs_len)
 
-tic = time.time()
-algorithm = RandomAlgorithm()
-episode = Episode(machine_configs, jobs_configs, algorithm, None)
-episode.run()
-print(episode.env.now, time.time() - tic, average_completion(episode), average_slowdown(episode))
+# tic = time.time()
+# algorithm = RandomAlgorithm()
+# episode = Episode(machine_configs, jobs_configs, algorithm, None)
+# episode.run()
+# print(episode.env.now, time.time() - tic, average_completion(episode), average_slowdown(episode))
 
-tic = time.time()
-algorithm = FirstFitAlgorithm()
-episode = Episode(machine_configs, jobs_configs, algorithm, None)
-episode.run()
-print(episode.env.now, time.time() - tic, average_completion(episode), average_slowdown(episode))
+# tic = time.time()
+# algorithm = FirstFitAlgorithm()
+# episode = Episode(machine_configs, jobs_configs, algorithm, None)
+# episode.run()
+# print(episode.env.now, time.time() - tic, average_completion(episode), average_slowdown(episode))
 
-tic = time.time()
-algorithm = Tetris()
-episode = Episode(machine_configs, jobs_configs, algorithm, None)
-episode.run()
-print(episode.env.now, time.time() - tic, average_completion(episode), average_slowdown(episode))
+# tic = time.time()
+# algorithm = Tetris()
+# episode = Episode(machine_configs, jobs_configs, algorithm, None)
+# episode.run()
+# print(episode.env.now, time.time() - tic, average_completion(episode), average_slowdown(episode))
 
 for itr in range(n_iter):
     tic = time.time()
     print("********** Iteration %i ************" % itr)
     processes = []
 
-    manager = Manager()
+    manager = Manager() # multiprocessing
     trajectories = manager.list([])
     makespans = manager.list([])
     average_completions = manager.list([])
